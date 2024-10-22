@@ -72,7 +72,6 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
@@ -82,6 +81,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             userGuess = gameViewModel.userGuess,
             onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
             onKeyboardDone = { gameViewModel.checkUserGuess() },
+            wordCount = gameUiState.currentWordCount,
             isGuessWrong = gameUiState.isGuessedWordWrong,
         )
         Column(
@@ -91,7 +91,6 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             verticalArrangement = Arrangement.spacedBy(mediumPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -102,7 +101,7 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
                 Text(stringResource(R.string.submit))
             }
             OutlinedButton(
-                onClick = { },
+                onClick = { gameViewModel.skipWord() }, // Corrected call
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -111,11 +110,9 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
                 )
             }
         }
-
-        GameStatus(score = 0, modifier = Modifier.padding(20.dp))
+        GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
     }
 }
-
 @Composable
 fun GameStatus(score: Int, modifier: Modifier = Modifier) {
     Card(
@@ -136,6 +133,7 @@ fun GameLayout(
     userGuess: String,
     onUserGuessChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
+    wordCount: Int,
     modifier: Modifier = Modifier
 ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -149,6 +147,11 @@ fun GameLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(mediumPadding)
         ) {
+            Text(
+                text = stringResource(R.string.word_count, wordCount),
+                style = typography.titleMedium,
+                color = colorScheme.onPrimary
+            )
             Text(
                 text = currentScrambledWord,
                 fontSize = 45.sp,
