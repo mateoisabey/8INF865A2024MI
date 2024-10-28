@@ -83,6 +83,10 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             onKeyboardDone = { gameViewModel.checkUserGuess() },
             wordCount = gameUiState.currentWordCount,
             isGuessWrong = gameUiState.isGuessedWordWrong,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(mediumPadding)
         )
         Column(
             modifier = Modifier
@@ -91,15 +95,17 @@ fun GameScreen(gameViewModel: GameViewModel = viewModel()) {
             verticalArrangement = Arrangement.spacedBy(mediumPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(start = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = { gameViewModel.checkUserGuess() }
             ) {
-                Text(stringResource(R.string.submit))
+                Text(
+                    text = stringResource(R.string.submit),
+                    fontSize = 16.sp
+                )
             }
+
             OutlinedButton(
                 onClick = { gameViewModel.skipWord() }, // Corrected call
                 modifier = Modifier.fillMaxWidth()
@@ -190,7 +196,7 @@ fun GameLayout(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = { onKeyboardDone() }
-                ),
+                )
             )
         }
     }
@@ -209,9 +215,6 @@ private fun FinalScoreDialog(
 
     AlertDialog(
         onDismissRequest = {
-            // Dismiss the dialog when the user clicks outside the dialog or on the back
-            // button. If you want to disable that functionality, simply use an empty
-            // onDismissRequest.
         },
         title = { Text(stringResource(R.string.congratulations)) },
         text = { Text(stringResource(R.string.you_scored, score)) },
